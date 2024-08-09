@@ -1,0 +1,272 @@
+<html><head><base href="https://stereo-sound-simulator.com/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Stereo Sound Simulator & Tester</title><style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.container {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+h1 {
+    text-align: center;
+    color: #bb86fc;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #03dac6;
+}
+
+input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    background: #333;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    border-radius: 5px;
+}
+
+input[type="range"]:hover {
+    opacity: 1;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #bb86fc;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #bb86fc;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+button {
+    grid-column: span 2;
+    background-color: #bb86fc;
+    color: #000;
+    border: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #03dac6;
+}
+
+.visualizer {
+    width: 100%;
+    height: 100px;
+    background-color: #333;
+    margin-top: 1rem;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+}
+</style><script type="text/javascript" nonce="3ef5692b142a4420908a6375302" src="//local.adguard.org?ts=1723064496692&amp;type=content-script&amp;dmn=party.websim.ai&amp;url=https%3A%2F%2Fparty.websim.ai%2Fapi%2Fv1%2Fsites%2FQSDrOplKfMZEPBtdx%2Fhtml%3Fraw%3Dtrue&amp;app=com.google.Chrome&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script>
+<script type="text/javascript" nonce="3ef5692b142a4420908a6375302" src="//local.adguard.org?ts=1723064496692&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;type=user-script"></script></head><body>
+<div class="container">
+    <h1>Stereo Sound Simulator & Tester</h1>
+    <div class="controls">
+        <div>
+            <label for="balance">Balance (Left-Right)</label>
+            <input type="range" id="balance" min="-1" max="1" step="0.1" value="0">
+        </div>
+        <div>
+            <label for="volume">Volume</label>
+            <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+        </div>
+        <div>
+            <label for="bass">Bass</label>
+            <input type="range" id="bass" min="-10" max="10" step="1" value="0">
+        </div>
+        <div>
+            <label for="treble">Treble</label>
+            <input type="range" id="treble" min="-10" max="10" step="1" value="0">
+        </div>
+        <div>
+            <label for="frequency">Frequency</label>
+            <input type="range" id="frequency" min="20" max="2000" step="1" value="440">
+        </div>
+        <div>
+            <label for="waveform">Waveform</label>
+            <select id="waveform">
+                <option value="sine">Sine</option>
+                <option value="square">Square</option>
+                <option value="sawtooth">Sawtooth</option>
+                <option value="triangle">Triangle</option>
+            </select>
+        </div>
+        <button id="playPause">Play / Pause</button>
+    </div>
+    <div class="visualizer">
+        <canvas id="canvas"></canvas>
+    </div>
+</div>
+
+<script>
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let oscillator, gainNode, panNode, bassEQ, trebleEQ, analyser;
+let isPlaying = false;
+
+const balanceControl = document.getElementById('balance');
+const volumeControl = document.getElementById('volume');
+const bassControl = document.getElementById('bass');
+const trebleControl = document.getElementById('treble');
+const frequencyControl = document.getElementById('frequency');
+const waveformControl = document.getElementById('waveform');
+const playPauseButton = document.getElementById('playPause');
+
+function setupAudio() {
+    oscillator = audioContext.createOscillator();
+    gainNode = audioContext.createGain();
+    panNode = audioContext.createStereoPanner();
+    bassEQ = audioContext.createBiquadFilter();
+    trebleEQ = audioContext.createBiquadFilter();
+    analyser = audioContext.createAnalyser();
+
+    oscillator.type = waveformControl.value;
+    oscillator.frequency.setValueAtTime(frequencyControl.value, audioContext.currentTime);
+
+    bassEQ.type = 'lowshelf';
+    bassEQ.frequency.value = 200;
+
+    trebleEQ.type = 'highshelf';
+    trebleEQ.frequency.value = 2000;
+
+    oscillator.connect(bassEQ);
+    bassEQ.connect(trebleEQ);
+    trebleEQ.connect(panNode);
+    panNode.connect(gainNode);
+    gainNode.connect(analyser);
+    analyser.connect(audioContext.destination);
+
+    oscillator.start();
+}
+
+function updateAudioParams() {
+    if (!oscillator) return;
+
+    panNode.pan.setValueAtTime(balanceControl.value, audioContext.currentTime);
+    gainNode.gain.setValueAtTime(volumeControl.value, audioContext.currentTime);
+    bassEQ.gain.setValueAtTime(bassControl.value, audioContext.currentTime);
+    trebleEQ.gain.setValueAtTime(trebleControl.value, audioContext.currentTime);
+    oscillator.frequency.setValueAtTime(frequencyControl.value, audioContext.currentTime);
+    oscillator.type = waveformControl.value;
+}
+
+playPauseButton.addEventListener('click', () => {
+    if (audioContext.state === 'suspended') {
+        audioContext.resume();
+    }
+
+    if (isPlaying) {
+        gainNode.disconnect();
+        isPlaying = false;
+        playPauseButton.textContent = 'Play';
+    } else {
+        setupAudio();
+        updateAudioParams();
+        isPlaying = true;
+        playPauseButton.textContent = 'Pause';
+        visualize();
+    }
+});
+
+[balanceControl, volumeControl, bassControl, trebleControl, frequencyControl, waveformControl].forEach(control => {
+    control.addEventListener('input', updateAudioParams);
+});
+
+// Visualizer
+const canvas = document.getElementById('canvas');
+const canvasCtx = canvas.getContext('2d');
+
+function visualize() {
+    const WIDTH = canvas.width;
+    const HEIGHT = canvas.height;
+
+    analyser.fftSize = 2048;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+
+    function draw() {
+        requestAnimationFrame(draw);
+
+        analyser.getByteTimeDomainData(dataArray);
+
+        canvasCtx.fillStyle = 'rgb(30, 30, 30)';
+        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = 'rgb(0, 255, 0)';
+
+        canvasCtx.beginPath();
+
+        const sliceWidth = WIDTH * 1.0 / bufferLength;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+            const v = dataArray[i] / 128.0;
+            const y = v * HEIGHT / 2;
+
+            if (i === 0) {
+                canvasCtx.moveTo(x, y);
+            } else {
+                canvasCtx.lineTo(x, y);
+            }
+
+            x += sliceWidth;
+        }
+
+        canvasCtx.lineTo(canvas.width, canvas.height / 2);
+        canvasCtx.stroke();
+    }
+
+    draw();
+}
+
+// Set canvas size
+function resizeCanvas() {
+    canvas.width = canvas.clientWidth * window.devicePixelRatio;
+    canvas.height = canvas.clientHeight * window.devicePixelRatio;
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+</script></body></html>

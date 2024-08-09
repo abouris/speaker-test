@@ -1,6 +1,6 @@
-<html><head><base href="https://stereo-sound-simulator.com/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Stereo Sound Simulator & Tester</title><style>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Enhanced Stereo Sound Simulator & Tester</title><style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #121212;
     color: #e0e0e0;
     display: flex;
@@ -13,20 +13,25 @@ body {
 
 .container {
     background-color: #1e1e1e;
-    border-radius: 10px;
+    border-radius: 15px;
     padding: 2rem;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: 0 0 30px rgba(187,134,252,0.3);
+    max-width: 800px;
+    width: 90%;
 }
 
 h1 {
     text-align: center;
     color: #bb86fc;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px rgba(187,134,252,0.5);
 }
 
 .controls {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
     margin-top: 2rem;
 }
 
@@ -34,6 +39,7 @@ label {
     display: block;
     margin-bottom: 0.5rem;
     color: #03dac6;
+    font-weight: bold;
 }
 
 input[type="range"] {
@@ -44,6 +50,7 @@ input[type="range"] {
     opacity: 0.7;
     transition: opacity 0.2s;
     border-radius: 5px;
+    height: 10px;
 }
 
 input[type="range"]:hover {
@@ -53,74 +60,130 @@ input[type="range"]:hover {
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     background: #bb86fc;
     cursor: pointer;
     border-radius: 50%;
+    box-shadow: 0 0 5px rgba(187,134,252,0.8);
 }
 
 input[type="range"]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     background: #bb86fc;
     cursor: pointer;
     border-radius: 50%;
+    box-shadow: 0 0 5px rgba(187,134,252,0.8);
+}
+
+select {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #333;
+    color: #e0e0e0;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
 button {
-    grid-column: span 2;
     background-color: #bb86fc;
     color: #000;
     border: none;
-    padding: 0.5rem;
-    font-size: 1rem;
+    padding: 1rem;
+    font-size: 1.2rem;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 button:hover {
     background-color: #03dac6;
+    transform: scale(1.05);
 }
 
 .visualizer {
     width: 100%;
-    height: 100px;
+    height: 150px;
     background-color: #333;
-    margin-top: 1rem;
-    border-radius: 5px;
+    margin-top: 2rem;
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
 #canvas {
     width: 100%;
     height: 100%;
 }
-</style><script type="text/javascript" nonce="3ef5692b142a4420908a6375302" src="//local.adguard.org?ts=1723064496692&amp;type=content-script&amp;dmn=party.websim.ai&amp;url=https%3A%2F%2Fparty.websim.ai%2Fapi%2Fv1%2Fsites%2FQSDrOplKfMZEPBtdx%2Fhtml%3Fraw%3Dtrue&amp;app=com.google.Chrome&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script>
+
+.preset-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+}
+
+.preset-button {
+    background-color: #03dac6;
+    color: #000;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.preset-button:hover {
+    background-color: #bb86fc;
+    transform: scale(1.05);
+}
+
+.value-display {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    color: #bb86fc;
+}
+
+@media (max-width: 600px) {
+    .controls {
+        grid-template-columns: 1fr;
+    }
+}
+</style><script type="text/javascript" nonce="3ef5692b142a4420908a6375302" src="//local.adguard.org?ts=1723064496692&amp;type=content-script&amp;dmn=party.websim.ai&amp;url=https%3A%2F%2Fparty.websim.ai%2Fapi%2Fv1%2Fsites%2FaZKtTsCeobd4TqTRZ%2Fhtml%3Fraw%3Dtrue&amp;app=com.google.Chrome&amp;css=3&amp;js=1&amp;rel=1&amp;rji=1&amp;sbe=1"></script>
 <script type="text/javascript" nonce="3ef5692b142a4420908a6375302" src="//local.adguard.org?ts=1723064496692&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;type=user-script"></script></head><body>
 <div class="container">
-    <h1>Stereo Sound Simulator & Tester</h1>
+    <h1>Enhanced Stereo Sound Simulator & Tester</h1>
     <div class="controls">
         <div>
             <label for="balance">Balance (Left-Right)</label>
             <input type="range" id="balance" min="-1" max="1" step="0.1" value="0">
+            <div class="value-display" id="balance-value">0</div>
         </div>
         <div>
             <label for="volume">Volume</label>
             <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+            <div class="value-display" id="volume-value">50%</div>
         </div>
         <div>
             <label for="bass">Bass</label>
             <input type="range" id="bass" min="-10" max="10" step="1" value="0">
+            <div class="value-display" id="bass-value">0 dB</div>
         </div>
         <div>
             <label for="treble">Treble</label>
             <input type="range" id="treble" min="-10" max="10" step="1" value="0">
+            <div class="value-display" id="treble-value">0 dB</div>
         </div>
         <div>
             <label for="frequency">Frequency</label>
             <input type="range" id="frequency" min="20" max="2000" step="1" value="440">
+            <div class="value-display" id="frequency-value">440 Hz</div>
         </div>
         <div>
             <label for="waveform">Waveform</label>
@@ -133,14 +196,19 @@ button:hover {
         </div>
         <button id="playPause">Play / Pause</button>
     </div>
+    <div class="preset-buttons">
+        <button class="preset-button" data-preset="bass-boost">Bass Boost</button>
+        <button class="preset-button" data-preset="treble-boost">Treble Boost</button>
+        <button class="preset-button" data-preset="balanced">Balanced</button>
+    </div>
     <div class="visualizer">
         <canvas id="canvas"></canvas>
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
 <script>
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-let oscillator, gainNode, panNode, bassEQ, trebleEQ, analyser;
+let synth, panner, bassEQ, trebleEQ, analyser;
 let isPlaying = false;
 
 const balanceControl = document.getElementById('balance');
@@ -151,56 +219,51 @@ const frequencyControl = document.getElementById('frequency');
 const waveformControl = document.getElementById('waveform');
 const playPauseButton = document.getElementById('playPause');
 
+// Value displays
+const balanceValue = document.getElementById('balance-value');
+const volumeValue = document.getElementById('volume-value');
+const bassValue = document.getElementById('bass-value');
+const trebleValue = document.getElementById('treble-value');
+const frequencyValue = document.getElementById('frequency-value');
+
 function setupAudio() {
-    oscillator = audioContext.createOscillator();
-    gainNode = audioContext.createGain();
-    panNode = audioContext.createStereoPanner();
-    bassEQ = audioContext.createBiquadFilter();
-    trebleEQ = audioContext.createBiquadFilter();
-    analyser = audioContext.createAnalyser();
+    synth = new Tone.Synth().toDestination();
+    panner = new Tone.Panner().toDestination();
+    bassEQ = new Tone.EQ3(-10, 0, 0).toDestination();
+    trebleEQ = new Tone.EQ3(0, 0, -10).toDestination();
+    analyser = new Tone.Analyser('waveform', 2048);
 
-    oscillator.type = waveformControl.value;
-    oscillator.frequency.setValueAtTime(frequencyControl.value, audioContext.currentTime);
-
-    bassEQ.type = 'lowshelf';
-    bassEQ.frequency.value = 200;
-
-    trebleEQ.type = 'highshelf';
-    trebleEQ.frequency.value = 2000;
-
-    oscillator.connect(bassEQ);
-    bassEQ.connect(trebleEQ);
-    trebleEQ.connect(panNode);
-    panNode.connect(gainNode);
-    gainNode.connect(analyser);
-    analyser.connect(audioContext.destination);
-
-    oscillator.start();
+    synth.chain(panner, bassEQ, trebleEQ, analyser, Tone.Destination);
 }
 
 function updateAudioParams() {
-    if (!oscillator) return;
+    if (!synth) return;
 
-    panNode.pan.setValueAtTime(balanceControl.value, audioContext.currentTime);
-    gainNode.gain.setValueAtTime(volumeControl.value, audioContext.currentTime);
-    bassEQ.gain.setValueAtTime(bassControl.value, audioContext.currentTime);
-    trebleEQ.gain.setValueAtTime(trebleControl.value, audioContext.currentTime);
-    oscillator.frequency.setValueAtTime(frequencyControl.value, audioContext.currentTime);
-    oscillator.type = waveformControl.value;
+    panner.pan.value = parseFloat(balanceControl.value);
+    synth.volume.value = Tone.gainToDb(parseFloat(volumeControl.value));
+    bassEQ.low.value = parseFloat(bassControl.value);
+    trebleEQ.high.value = parseFloat(trebleControl.value);
+    synth.frequency.value = parseFloat(frequencyControl.value);
+    synth.oscillator.type = waveformControl.value;
+
+    // Update value displays
+    balanceValue.textContent = balanceControl.value;
+    volumeValue.textContent = `${Math.round(volumeControl.value * 100)}%`;
+    bassValue.textContent = `${bassControl.value} dB`;
+    trebleValue.textContent = `${trebleControl.value} dB`;
+    frequencyValue.textContent = `${frequencyControl.value} Hz`;
 }
 
-playPauseButton.addEventListener('click', () => {
-    if (audioContext.state === 'suspended') {
-        audioContext.resume();
-    }
-
+playPauseButton.addEventListener('click', async () => {
+    await Tone.start();
     if (isPlaying) {
-        gainNode.disconnect();
+        synth.triggerRelease();
         isPlaying = false;
         playPauseButton.textContent = 'Play';
     } else {
         setupAudio();
         updateAudioParams();
+        synth.triggerAttack(frequencyControl.value);
         isPlaying = true;
         playPauseButton.textContent = 'Pause';
         visualize();
@@ -219,30 +282,26 @@ function visualize() {
     const WIDTH = canvas.width;
     const HEIGHT = canvas.height;
 
-    analyser.fftSize = 2048;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
     canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
     function draw() {
         requestAnimationFrame(draw);
 
-        analyser.getByteTimeDomainData(dataArray);
+        const waveform = analyser.getValue();
 
         canvasCtx.fillStyle = 'rgb(30, 30, 30)';
         canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
-        canvasCtx.lineWidth = 2;
+        canvasCtx.lineWidth = 3;
         canvasCtx.strokeStyle = 'rgb(0, 255, 0)';
 
         canvasCtx.beginPath();
 
-        const sliceWidth = WIDTH * 1.0 / bufferLength;
+        const sliceWidth = WIDTH * 1.0 / waveform.length;
         let x = 0;
 
-        for (let i = 0; i < bufferLength; i++) {
-            const v = dataArray[i] / 128.0;
+        for (let i = 0; i < waveform.length; i++) {
+            const v = waveform[i] + 1;
             const y = v * HEIGHT / 2;
 
             if (i === 0) {
@@ -269,4 +328,26 @@ function resizeCanvas() {
 
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
+
+// Presets
+const presetButtons = document.querySelectorAll('.preset-button');
+
+const presets = {
+    'bass-boost': { bass: 8, treble: -2, frequency: 100 },
+    'treble-boost': { bass: -2, treble: 8, frequency: 2000 },
+    'balanced': { bass: 0, treble: 0, frequency: 440 }
+};
+
+presetButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const preset = presets[button.dataset.preset];
+        bassControl.value = preset.bass;
+        trebleControl.value = preset.treble;
+        frequencyControl.value = preset.frequency;
+        updateAudioParams();
+    });
+});
+
+// Initialize value displays
+updateAudioParams();
 </script></body></html>
